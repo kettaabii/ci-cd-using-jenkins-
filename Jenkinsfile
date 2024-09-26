@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        DOCKERHUB_CREDENTIALS = 'dckr_pat_I_e13e87093ab8vznUVLSqlb6PE'
+        DOCKERHUB_CREDENTIALS = 'dockerhub'
         SONARQUBE_CREDENTIALS = 'squ_43f54098f6a91e875e7952d697a1ea6b12770b91'
     }
 
@@ -106,27 +106,41 @@ pipeline {
             }
         }
 
-        stage('Build Docker Images & Push') {
-            parallel {
-                   stage('Build Docker & Push for user-service') {
-                       agent any
-                       steps {
-                           dir('user-service') {
-                               script {
-                                   def dockerImage = docker.build("meleke/user-service:${env.TAG_VERSION ?: 'latest'}")
-                                   docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS') {
-                                       dockerImage.push()
-                                   }
-                               }
-                           }
-                       }
-                   }
-//                 stage('Build Docker & Push for user-service') {
+//         stage('Build Docker Images & Push') {
+//             parallel {
+//                    stage('Build Docker & Push for user-service') {
+//                        agent any
+//                        steps {
+//                            dir('user-service') {
+//                                script {
+//                                    def dockerImage = docker.build("meleke/user-service:${env.TAG_VERSION ?: 'latest'}")
+//                                    docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS') {
+//                                        dockerImage.push()
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+// //                 stage('Build Docker & Push for user-service') {
+// //                     agent any
+// //                     steps {
+// //                         dir('user-service') {
+// //                             script {
+// //                                 def dockerImage = docker.build("meleke/user-service:${env.TAG_VERSION ?: 'latest'}")
+// //                                 docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS') {
+// //                                     dockerImage.push()
+// //                                 }
+// //                             }
+// //                         }
+// //                     }
+// //                 }
+//
+//                 stage('Build Docker & Push for project-service') {
 //                     agent any
 //                     steps {
-//                         dir('user-service') {
+//                         dir('project-service') {
 //                             script {
-//                                 def dockerImage = docker.build("meleke/user-service:${env.TAG_VERSION ?: 'latest'}")
+//                                 def dockerImage = docker.build("meleke/project-service:${env.TAG_VERSION ?: 'latest'}")
 //                                 docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS') {
 //                                     dockerImage.push()
 //                                 }
@@ -134,83 +148,91 @@ pipeline {
 //                         }
 //                     }
 //                 }
+//
+//                 stage('Build Docker & Push for task-service') {
+//                     agent any
+//                     steps {
+//                         dir('task-service') {
+//                             script {
+//                                 def dockerImage = docker.build("meleke/task-service:${env.TAG_VERSION ?: 'latest'}")
+//                                 docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS') {
+//                                     dockerImage.push()
+//                                 }
+//                             }
+//                         }
+//                     }
+//                 }
+//
+//                 stage('Build Docker & Push for resource-service') {
+//                     agent any
+//                     steps {
+//                         dir('resource-service') {
+//                             script {
+//                                 def dockerImage = docker.build("meleke/resource-service:${env.TAG_VERSION ?: 'latest'}")
+//                                 docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS') {
+//                                     dockerImage.push()
+//                                 }
+//                             }
+//                         }
+//                     }
+//                 }
+//
+//                 stage('Build Docker & Push for api-gateway-service') {
+//                     agent any
+//                     steps {
+//                         dir('api-gateway-service') {
+//                             script {
+//                                 def dockerImage = docker.build("meleke/api-gateway-service:${env.TAG_VERSION ?: 'latest'}")
+//                                 docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS') {
+//                                     dockerImage.push()
+//                                 }
+//                             }
+//                         }
+//                     }
+//                 }
+//
+//                 stage('Build Docker & Push for eureka-server') {
+//                     agent any
+//                     steps {
+//                         dir('eureka-server') {
+//                             script {
+//                                 def dockerImage = docker.build("meleke/eureka-server:${env.TAG_VERSION ?: 'latest'}")
+//                                 docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS') {
+//                                     dockerImage.push()
+//                                 }
+//                             }
+//                         }
+//                     }
+//                 }
+//             }
+//         }
+//     }
+ stage('Build Docker Images & Push') {
+            steps {
+                script {
+                    def services = ['user-service', 'project-service', 'task-service', 'resource-service', 'api-gateway-service', 'eureka-server']
 
-                stage('Build Docker & Push for project-service') {
-                    agent any
-                    steps {
-                        dir('project-service') {
-                            script {
-                                def dockerImage = docker.build("meleke/project-service:${env.TAG_VERSION ?: 'latest'}")
-                                docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS') {
-                                    dockerImage.push()
-                                }
-                            }
-                        }
-                    }
-                }
+                    services.each { service ->
+                        dir(service) {
+                            def imageName = "meleke/${service}:${TAG_VERSION}"
+                            sh "echo 'Building ${imageName}'"
+                            sh "docker build -t ${imageName} . || (echo 'Docker build failed for ${service}'; docker build -t ${imageName} . --no-cache --progress=plain; exit 1)"
 
-                stage('Build Docker & Push for task-service') {
-                    agent any
-                    steps {
-                        dir('task-service') {
-                            script {
-                                def dockerImage = docker.build("meleke/task-service:${env.TAG_VERSION ?: 'latest'}")
-                                docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS') {
-                                    dockerImage.push()
-                                }
-                            }
-                        }
-                    }
-                }
-
-                stage('Build Docker & Push for resource-service') {
-                    agent any
-                    steps {
-                        dir('resource-service') {
-                            script {
-                                def dockerImage = docker.build("meleke/resource-service:${env.TAG_VERSION ?: 'latest'}")
-                                docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS') {
-                                    dockerImage.push()
-                                }
-                            }
-                        }
-                    }
-                }
-
-                stage('Build Docker & Push for api-gateway-service') {
-                    agent any
-                    steps {
-                        dir('api-gateway-service') {
-                            script {
-                                def dockerImage = docker.build("meleke/api-gateway-service:${env.TAG_VERSION ?: 'latest'}")
-                                docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS') {
-                                    dockerImage.push()
-                                }
-                            }
-                        }
-                    }
-                }
-
-                stage('Build Docker & Push for eureka-server') {
-                    agent any
-                    steps {
-                        dir('eureka-server') {
-                            script {
-                                def dockerImage = docker.build("meleke/eureka-server:${env.TAG_VERSION ?: 'latest'}")
-                                docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS') {
-                                    dockerImage.push()
-                                }
+                            withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                                sh "echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin"
+                                sh "docker push ${imageName} || (echo 'Docker push failed for ${service}'; exit 1)"
                             }
                         }
                     }
                 }
             }
         }
-    }
+
 
     post {
         always {
             // Clean up steps
+            sh 'docker logout'
             cleanWs()
         }
     }
