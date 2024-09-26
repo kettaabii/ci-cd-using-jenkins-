@@ -106,7 +106,28 @@ pipeline {
             }
         }
 
-//         stage('Build Docker Images & Push') {
+        stage('Build Docker Images & Push') {
+             steps {
+                  script {
+                      def services = ['user-service', 'project-service', 'task-service', 'resource-service', 'api-gateway-service', 'eureka-server']
+
+                      services.each { service ->
+                      dir(service) {
+                      def imageName = "meleke/${service}:${TAG_VERSION}"
+                      sh "echo 'Building ${imageName}'"
+                      sh "docker build -t ${imageName} . || (echo 'Docker build failed for ${service}'; docker build -t ${imageName} . --no-cache --progress=plain; exit 1)"
+
+                      withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                      sh "echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin"
+                      sh "docker push ${imageName} || (echo 'Docker push failed for ${service}'; exit 1)"
+                          }
+                      }
+                  }
+             }
+        }
+
+
+ //        stage('Build Docker Images & Push') {
 //             parallel {
 //                    stage('Build Docker & Push for user-service') {
 //                        agent any
@@ -207,26 +228,7 @@ pipeline {
 //             }
 //         }
 //     }
- stage('Build Docker Images & Push') {
-            steps {
-                script {
-                    def services = ['user-service', 'project-service', 'task-service', 'resource-service', 'api-gateway-service', 'eureka-server']
 
-                    services.each { service ->
-                        dir(service) {
-                            def imageName = "meleke/${service}:${TAG_VERSION}"
-                            sh "echo 'Building ${imageName}'"
-                            sh "docker build -t ${imageName} . || (echo 'Docker build failed for ${service}'; docker build -t ${imageName} . --no-cache --progress=plain; exit 1)"
-
-                            withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                                sh "echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin"
-                                sh "docker push ${imageName} || (echo 'Docker push failed for ${service}'; exit 1)"
-                            }
-                        }
-                    }
-                }
-            }
-        }
 
 
     post {
