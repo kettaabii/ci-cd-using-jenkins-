@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: resource-service
+  config:
+    import: optional:configserver:http://config-server:8888
+  cloud:
+    config:
+      enabled: true
+      uri: http://config-server:8888
+      failFast: true
+      retry:
+        maxAttempts: 20
