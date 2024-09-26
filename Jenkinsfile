@@ -108,19 +108,32 @@ pipeline {
 
         stage('Build Docker Images & Push') {
             parallel {
-                stage('Build Docker & Push for user-service') {
-                    agent any
-                    steps {
-                        dir('user-service') {
-                            script {
-                                def dockerImage = docker.build("meleke/user-service:${env.TAG_VERSION ?: 'latest'}")
-                                docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS') {
-                                    dockerImage.push()
-                                }
-                            }
-                        }
-                    }
-                }
+                   stage('Build Docker & Push for user-service') {
+                       agent any
+                       steps {
+                           dir('user-service') {
+                               script {
+                                   def dockerImage = docker.build("meleke/user-service:${env.TAG_VERSION ?: 'latest'}")
+                                   docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS') {
+                                       dockerImage.push()
+                                   }
+                               }
+                           }
+                       }
+                   }
+//                 stage('Build Docker & Push for user-service') {
+//                     agent any
+//                     steps {
+//                         dir('user-service') {
+//                             script {
+//                                 def dockerImage = docker.build("meleke/user-service:${env.TAG_VERSION ?: 'latest'}")
+//                                 docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS') {
+//                                     dockerImage.push()
+//                                 }
+//                             }
+//                         }
+//                     }
+//                 }
 
                 stage('Build Docker & Push for project-service') {
                     agent any
