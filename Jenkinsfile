@@ -13,7 +13,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/kettaabii/MicroservicesProject.git'
+                git branch: 'main', url: 'https://github.com/kettaabii/ci-cd-using-jenkins-.git'
             }
         }
 
