@@ -8,6 +8,7 @@ pipeline {
     environment {
         DOCKERHUB_CREDENTIALS = 'dockerhub'
         SONARQUBE_CREDENTIALS = 'squ_43f54098f6a91e875e7952d697a1ea6b12770b91'
+        TAG_VERSION = "${env.BUILD_NUMBER}"
     }
 
     stages {
@@ -16,9 +17,6 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/kettaabii/ci-cd-using-jenkins-.git'
             }
         }
-
-//ts
-
 
         stage('Build & Test Microservices') {
             parallel {
@@ -84,156 +82,41 @@ pipeline {
                 script {
                     def scannerHome = tool 'SonarQubeScanner'
 
-                    dir('user-service') {
-                        sh "${scannerHome}/bin/sonar-scanner  -Dsonar.projectKey=user-service -Dsonar.sources=. -Dsonar.token=${SONARQUBE_CREDENTIALS} -Dsonar.java.binaries=target/classes"
-                    }
-                    dir('project-service') {
-                        sh "${scannerHome}/bin/sonar-scanner   -Dsonar.projectKey=project-service -Dsonar.sources=. -Dsonar.token=${SONARQUBE_CREDENTIALS} -Dsonar.java.binaries=target/classes"
-                    }
-                    dir('task-service') {
-                        sh "${scannerHome}/bin/sonar-scanner  -Dsonar.projectKey=task-service -Dsonar.sources=. -Dsonar.token=${SONARQUBE_CREDENTIALS} -Dsonar.java.binaries=target/classes"
-                    }
-                    dir('resource-service') {
-                        sh "${scannerHome}/bin/sonar-scanner  -Dsonar.projectKey=resource-service -Dsonar.sources=. -Dsonar.token=${SONARQUBE_CREDENTIALS} -Dsonar.java.binaries=target/classes"
-                    }
-                    dir('api-gateway-service') {
-                        sh "${scannerHome}/bin/sonar-scanner  -Dsonar.projectKey=api-gateway-service -Dsonar.sources=. -Dsonar.token=${SONARQUBE_CREDENTIALS} -Dsonar.java.binaries=target/classes"
-                    }
-                    dir('eureka-server') {
-                        sh "${scannerHome}/bin/sonar-scanner  -Dsonar.projectKey=eureka-server -Dsonar.sources=. -Dsonar.token=${SONARQUBE_CREDENTIALS} -Dsonar.java.binaries=target/classes"
+                    def services = ['user-service', 'project-service', 'task-service', 'resource-service', 'api-gateway-service', 'eureka-server']
+
+                    services.each { service ->
+                        dir(service) {
+                            sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${service} -Dsonar.sources=. -Dsonar.token=${SONARQUBE_CREDENTIALS} -Dsonar.java.binaries=target/classes"
+                        }
                     }
                 }
             }
         }
 
         stage('Build Docker Images & Push') {
-             steps {
-                  script {
-                      def services = ['user-service', 'project-service', 'task-service', 'resource-service', 'api-gateway-service', 'eureka-server']
+            steps {
+                script {
+                    def services = ['user-service', 'project-service', 'task-service', 'resource-service', 'api-gateway-service', 'eureka-server']
 
-                      services.each { service ->
-                      dir(service) {
-                      def imageName = "meleke/${service}:${TAG_VERSION}"
-                      sh "echo 'Building ${imageName}'"
-                      sh "docker build -t ${imageName} . || (echo 'Docker build failed for ${service}'; docker build -t ${imageName} . --no-cache --progress=plain; exit 1)"
+                    services.each { service ->
+                        dir(service) {
+                            def imageName = "meleke/${service}:${TAG_VERSION}"
+                            sh "echo 'Building ${imageName}'"
+                            sh "docker build -t ${imageName} . || (echo 'Docker build failed for ${service}'; docker build -t ${imageName} . --no-cache --progress=plain; exit 1)"
 
-                      withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                      sh "echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin"
-                      sh "docker push ${imageName} || (echo 'Docker push failed for ${service}'; exit 1)"
-                          }
-                      }
-                  }
-             }
+                            withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                                sh "echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin"
+                                sh "docker push ${imageName} || (echo 'Docker push failed for ${service}'; exit 1)"
+                            }
+                        }
+                    }
+                }
+            }
         }
-
-
- //        stage('Build Docker Images & Push') {
-//             parallel {
-//                    stage('Build Docker & Push for user-service') {
-//                        agent any
-//                        steps {
-//                            dir('user-service') {
-//                                script {
-//                                    def dockerImage = docker.build("meleke/user-service:${env.TAG_VERSION ?: 'latest'}")
-//                                    docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS') {
-//                                        dockerImage.push()
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-// //                 stage('Build Docker & Push for user-service') {
-// //                     agent any
-// //                     steps {
-// //                         dir('user-service') {
-// //                             script {
-// //                                 def dockerImage = docker.build("meleke/user-service:${env.TAG_VERSION ?: 'latest'}")
-// //                                 docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS') {
-// //                                     dockerImage.push()
-// //                                 }
-// //                             }
-// //                         }
-// //                     }
-// //                 }
-//
-//                 stage('Build Docker & Push for project-service') {
-//                     agent any
-//                     steps {
-//                         dir('project-service') {
-//                             script {
-//                                 def dockerImage = docker.build("meleke/project-service:${env.TAG_VERSION ?: 'latest'}")
-//                                 docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS') {
-//                                     dockerImage.push()
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 }
-//
-//                 stage('Build Docker & Push for task-service') {
-//                     agent any
-//                     steps {
-//                         dir('task-service') {
-//                             script {
-//                                 def dockerImage = docker.build("meleke/task-service:${env.TAG_VERSION ?: 'latest'}")
-//                                 docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS') {
-//                                     dockerImage.push()
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 }
-//
-//                 stage('Build Docker & Push for resource-service') {
-//                     agent any
-//                     steps {
-//                         dir('resource-service') {
-//                             script {
-//                                 def dockerImage = docker.build("meleke/resource-service:${env.TAG_VERSION ?: 'latest'}")
-//                                 docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS') {
-//                                     dockerImage.push()
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 }
-//
-//                 stage('Build Docker & Push for api-gateway-service') {
-//                     agent any
-//                     steps {
-//                         dir('api-gateway-service') {
-//                             script {
-//                                 def dockerImage = docker.build("meleke/api-gateway-service:${env.TAG_VERSION ?: 'latest'}")
-//                                 docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS') {
-//                                     dockerImage.push()
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 }
-//
-//                 stage('Build Docker & Push for eureka-server') {
-//                     agent any
-//                     steps {
-//                         dir('eureka-server') {
-//                             script {
-//                                 def dockerImage = docker.build("meleke/eureka-server:${env.TAG_VERSION ?: 'latest'}")
-//                                 docker.withRegistry('https://index.docker.io/v1/', 'DOCKERHUB_CREDENTIALS') {
-//                                     dockerImage.push()
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 }
-//             }
-//         }
-//     }
-
-
+    }
 
     post {
         always {
-            // Clean up steps
             sh 'docker logout'
             cleanWs()
         }
