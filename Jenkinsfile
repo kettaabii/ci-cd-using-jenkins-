@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('docker-hub')
+        DOCKERHUB_CREDENTIALS = 'dckr_pat_I_e13e87093ab8vznUVLSqlb6PE'
         SONARQUBE_CREDENTIALS = 'squ_43f54098f6a91e875e7952d697a1ea6b12770b91'
     }
 
