@@ -1,5 +1,10 @@
 pipeline {
-    agent { label 'linux' }
+    agent { label 'linux'
+     docker {
+                 image 'docker:latest'
+                 args '-v /var/run/docker.sock:/var/run/docker.sock'
+             }
+           }
 
     tools {
         maven 'mvn'
@@ -24,8 +29,10 @@ pipeline {
                     agent any
                     steps {
                         dir('user-service') {
-                            sh 'mvn clean package'
+                            sh 'mvn clean '
+                            sh 'mvn validate'
                         }
+
                     }
                 }
 
