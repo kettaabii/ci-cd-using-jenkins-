@@ -44,9 +44,7 @@
 				<configuration>
 					<mainClass>com.api_gateway_service.ApiGatewayServiceApplication</mainClass>
 					<layout>JAR</layout>
-					<jvmArguments>
-						<jvmArgument>--enable-preview</jvmArgument>
-					</jvmArguments>
+
 				</configuration>
 				<executions>
 					<execution>
@@ -62,9 +60,7 @@
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
-					<compilerArgs>
-						<arg>--enable-preview</arg>
-					</compilerArgs>
+
 				</configuration>
 			</plugin>
 		</plugins>

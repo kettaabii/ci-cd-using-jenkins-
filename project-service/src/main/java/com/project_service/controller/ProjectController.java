@@ -4,6 +4,7 @@ import com.project_service.dto.ProjectDto;
 import com.project_service.exception.ProjectNotFoundException;
 import com.project_service.service.ProjectService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,9 +17,14 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @GetMapping("/get-all-projects")
-    public ResponseEntity<?> getAllProjects() {
+    public ResponseEntity<?> getAllProjects(
+            @RequestParam(defaultValue = "0" , name = "page") int page ,
+            @RequestParam(defaultValue = "10", name= "size") int size ,
+            @RequestParam(defaultValue = "name" , name ="sortField") String sortField ,
+            @RequestParam(defaultValue = "asc" , name = "sortDirection") String sortDirection )
+    {
         try {
-            var projects = projectService.getAllProjects();
+            var projects = projectService.getAllProjects(page,size , sortField , sortDirection);
             return ResponseEntity.ok(projects);
         } catch (ProjectNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

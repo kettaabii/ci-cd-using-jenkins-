@@ -25,7 +25,7 @@ pipeline {
                     agent any
                     steps {
                         dir('user-service') {
-                            sh 'mvn clean '
+                            sh 'mvn clean  '
                             sh 'mvn validate'
                         }
 

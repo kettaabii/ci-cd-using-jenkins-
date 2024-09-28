@@ -11,6 +11,10 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,9 +47,11 @@ public class ProjectService {
         return projectMapper.toDto(savedProject);
     }
 
-    public List<Project> getAllProjects() {
-        var projects = projectRepository.findAll();
-        if (projects.isEmpty()) {
+    public Page<Project> getAllProjects(int page , int size , String sortField , String sortDirection) {
+        Sort.Direction direction = sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortField));
+        var projects = projectRepository.findAll(pageable);
+        if (projects.getContent().isEmpty()) {
             throw new ProjectNotFoundException("Projects not found!");
         }
         return projects;

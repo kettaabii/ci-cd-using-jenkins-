@@ -26,12 +26,12 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/api/project/**").hasAuthority(Role.CLIENT.name())
-                                .requestMatchers(HttpMethod.PUT, "/api/project/**").hasAnyAuthority(Role.CLIENT.name())
-                                .requestMatchers(HttpMethod.DELETE, "/api/project/**").hasAnyAuthority(Role.CLIENT.name())
-                                .requestMatchers(HttpMethod.GET, "/api/project/**").hasAnyAuthority(Role.CLIENT.name(), Role.ADMIN.name(), Role.SUPERVISOR.name())
-                                .anyRequest().denyAll()
+//                                .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
+//                                .requestMatchers(HttpMethod.POST, "/api/project/**").hasAuthority(Role.CLIENT.name())
+//                                .requestMatchers(HttpMethod.PUT, "/api/project/**").hasAnyAuthority(Role.CLIENT.name())
+//                                .requestMatchers(HttpMethod.DELETE, "/api/project/**").hasAnyAuthority(Role.CLIENT.name())
+//                                .requestMatchers(HttpMethod.GET, "/api/project/**").hasAnyAuthority(Role.CLIENT.name(), Role.ADMIN.name(), Role.SUPERVISOR.name())
+                                .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)

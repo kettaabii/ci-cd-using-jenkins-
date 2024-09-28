@@ -98,12 +98,6 @@
 			<artifactId>flyway-mysql</artifactId>
 		</dependency>
 
-		<!-- MySQL Connector Dependency -->
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>${mysql.connector.version}</version>
-		</dependency>
 
 		<!-- Lombok for reducing boilerplate code -->
 		<dependency>
@@ -219,6 +213,11 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
 			<groupId>io.github.resilience4j</groupId>
 			<artifactId>resilience4j-reactor</artifactId>
 		</dependency>
@@ -277,9 +276,6 @@
 					<configuration>
 						<mainClass>com.resource_service.ResourceServiceApplication</mainClass>
 						<layout>JAR</layout>
-						<jvmArguments>
-							<jvmArgument>--enable-preview</jvmArgument>
-						</jvmArguments>
 					</configuration>
 					<executions>
 						<execution>
@@ -313,7 +309,6 @@
 							</dependency>
 						</annotationProcessorPaths>
 						<compilerArgs>
-							<arg>--enable-preview</arg>
 							<compilerArg>
 								-Amapstruct.defaultComponentModel=spring
 							</compilerArg>

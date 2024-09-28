@@ -26,12 +26,12 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/api/resources/**").hasAnyAuthority(Role.CLIENT.name(), Role.SUPERVISOR.name())
-                                .requestMatchers(HttpMethod.PUT, "/api/resources/**").hasAnyAuthority(Role.CLIENT.name(),Role.SUPERVISOR.name())
-                                .requestMatchers(HttpMethod.DELETE, "/api/resources/**").hasAnyAuthority(Role.CLIENT.name(), Role.SUPERVISOR.name())
-                                .requestMatchers(HttpMethod.GET, "/api/resources/**").hasAnyAuthority(Role.CLIENT.name(), Role.ADMIN.name(), Role.SUPERVISOR.name())
-                                .anyRequest().denyAll()
+//                                .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
+//                                .requestMatchers(HttpMethod.POST, "/api/resources/**").hasAnyAuthority(Role.CLIENT.name(), Role.SUPERVISOR.name())
+//                                .requestMatchers(HttpMethod.PUT, "/api/resources/**").hasAnyAuthority(Role.CLIENT.name(),Role.SUPERVISOR.name())
+//                                .requestMatchers(HttpMethod.DELETE, "/api/resources/**").hasAnyAuthority(Role.CLIENT.name(), Role.SUPERVISOR.name())
+//                                .requestMatchers(HttpMethod.GET, "/api/resources/**").hasAnyAuthority(Role.CLIENT.name(), Role.ADMIN.name(), Role.SUPERVISOR.name())
+                                .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
