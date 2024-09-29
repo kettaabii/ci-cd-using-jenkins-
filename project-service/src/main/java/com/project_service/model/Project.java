@@ -1,8 +1,11 @@
 package com.project_service.model;
 
+
 import com.project_service.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.sql.Date;
 
@@ -20,6 +23,7 @@ public class Project {
     @Column(name = "id", nullable = false, unique = true)
     private Long id;
 
+    @Field(type = FieldType.Text, name = "name")
     @Column(name = "name", nullable = false)
     private String name;
 
@@ -36,6 +40,7 @@ public class Project {
     @Column(name = "status", nullable = false)
     private Status status;
 
+    @Field(type = FieldType.Text , name = "name")
     @Column(name = "description", nullable = false)
     private String description;
 

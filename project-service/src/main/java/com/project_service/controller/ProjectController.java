@@ -3,8 +3,13 @@ package com.project_service.controller;
 import com.project_service.dto.ProjectDto;
 import com.project_service.enums.Status;
 import com.project_service.exception.ProjectNotFoundException;
+import com.project_service.model.Project;
 import com.project_service.service.ProjectService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.core.SearchPage;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -103,6 +108,16 @@ public class ProjectController {
     public ResponseEntity<List<String>> autocomplete(@RequestParam( name = "term") String term) {
         List<String> suggestions = projectService.getAutocompleteSuggestions(term);
         return ResponseEntity.ok(suggestions);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<SearchPage<Project>> searchProjects(
+            @RequestParam String query ,
+            @RequestParam(defaultValue = "0") int page ,
+            @RequestParam(defaultValue = "10") int size ){
+        Pageable pageable = PageRequest.of(page,size);
+        SearchPage<Project> searchResults = projectService.searchProjects(query,pageable);
+        return ResponseEntity.ok(searchResults);
     }
 
 }

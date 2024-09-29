@@ -17,11 +17,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.*;
+import org.springframework.data.elasticsearch.core.query.Criteria;
+import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.data.elasticsearch.core.SearchHitSupport;
+
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -40,6 +46,7 @@ public class ProjectService {
     private final RestTemplate restTemplate;
     private final String TASK_SERVICE_URL = "http://task-service/api/tasks";
     private final Logger logger = LoggerFactory.getLogger(ProjectService.class);
+    private final ElasticsearchTemplate elasticsearchTemplate ;
 
     private HttpEntity<Void> createHttpEntity() {
         String token = RequestContext.getJwtToken();
@@ -152,5 +159,17 @@ public class ProjectService {
         return results.getContent().stream()
                 .map(Project::getName)
                 .collect(Collectors.toList());
+    }
+
+    public SearchPage<Project> searchProjects(String query , Pageable pageable) {
+        Criteria criteria = new Criteria("name").fuzzy(query)
+                .or(new Criteria("description").fuzzy(query));
+
+        CriteriaQuery searchQuery = new CriteriaQuery(criteria)
+                .setPageable(pageable);
+
+        SearchHits<Project> searchHits=elasticsearchTemplate.search(searchQuery,Project.class);
+        return SearchHitSupport.searchPageFor(searchHits,pageable);
+
     }
 }

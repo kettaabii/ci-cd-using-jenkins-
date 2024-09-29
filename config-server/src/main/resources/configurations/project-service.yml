@@ -37,6 +37,9 @@ eureka:
   instance:
     prefer-ip-address: true
 
+  elasticsearch:
+    uris: http://localhost:9200
+
 openapi:
   service:
     title: PROJECT-SERVICE doc
