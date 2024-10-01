@@ -3,7 +3,6 @@ package com.user_service.controller;
 import com.user_service.dto.AdminDto;
 import com.user_service.dto.AuthenticationRequest;
 import com.user_service.dto.ClientDto;
-import com.user_service.dto.SupervisorDto;
 import com.user_service.exception.RegistrationException;
 import com.user_service.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
@@ -25,9 +24,10 @@ public class AuthenticationController {
             var response = authenticationService.login(authenticationRequest);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(String.format("Invalid credentials : "+e.getMessage()));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(String.format("Invalid credentials : " + e.getMessage()));
         }
     }
+
     @PostMapping("/register/admin")
     public ResponseEntity<?> adminRegister(@RequestBody AdminDto registerRequest) {
         try {
@@ -50,14 +50,4 @@ public class AuthenticationController {
         }
     }
 
-    @PostMapping("/register/supervisor")
-    public ResponseEntity<?> supervisorRegister(@RequestBody SupervisorDto registerRequest) {
-        try {
-
-            var authResponse = authenticationService.supervisorRegister(registerRequest);
-            return ResponseEntity.ok(authResponse);
-        } catch (RegistrationException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        }
-    }
 }

@@ -10,10 +10,25 @@ spring:
       failFast: true
       retry:
         maxAttempts: 20
+
     gateway:
-      global-cors:
-        cors-configurations:
-          '[/**]':
-            allowedOriginPatterns: "*"
-            allowedMethods: "*"
-            allowCredentials: true
+        default-filters:
+          - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+          - AddResponseHeader=X-Response-Default, Default-Header-Value
+          - RemoveResponseHeader=X-Removed-Header
+          - AddRequestHeader=X-Authenticated-User, admin
+
+        globalcors:
+          corsConfigurations:
+            '[/**]':
+              allowedOrigins:
+                - "http://localhost:4200"
+              allowedHeaders: "*"
+              allowedMethods:
+                - GET
+                - POST
+                - DELETE
+                - PUT
+                - OPTIONS
+              allowCredentials: true
+              maxAge: 3600

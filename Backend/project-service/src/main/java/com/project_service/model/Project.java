@@ -1,6 +1,7 @@
 package com.project_service.model;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project_service.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
@@ -37,11 +38,13 @@ public class Project {
     @Column(name = "geolocation", nullable = false)
     private String geolocation;
 
-    @Column(name = "date_start", nullable = false)
-    private Date dateStart;
+//    @Column(name = "date_start", nullable = false)
+//    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+//    private Date dateStart;
 
-    @Column(name = "date_end", nullable = false)
-    private Date dateEnd;
+//    @Column(name = "date_end", nullable = false)
+//    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
+//    private Date dateEnd;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
@@ -86,27 +89,27 @@ public class Project {
 
 
 
-//    @Transient
-//    private final List<Object> domainEvents=new ArrayList<>();
-//
-//    @DomainEvents
-//    public Collection<Object> domainEvents(){
-//        return List.copyOf(domainEvents);
-//    }
-//
-//    @AfterDomainEventPublication
-//    public void clearDomainEvents(){
-//        domainEvents.clear();
-//    }
-//
-//    public void registerEvent(Object event){
-//        domainEvents.add(event);
-//    }
-//
-//    @PrePersist
-//    @PreUpdate
-//    public void prePersistOrUpdate(){
-//        registerEvent(new ProjectChangedEvent(this));
-//    }
+    @Transient
+    private final List<Object> domainEvents=new ArrayList<>();
+
+    @DomainEvents
+    public Collection<Object> domainEvents(){
+        return List.copyOf(domainEvents);
+    }
+
+    @AfterDomainEventPublication
+    public void clearDomainEvents(){
+        domainEvents.clear();
+    }
+
+    public void registerEvent(Object event){
+        domainEvents.add(event);
+    }
+
+    @PrePersist
+    @PreUpdate
+    public void prePersistOrUpdate(){
+        registerEvent(new ProjectChangedEvent(this));
+    }
 
 }

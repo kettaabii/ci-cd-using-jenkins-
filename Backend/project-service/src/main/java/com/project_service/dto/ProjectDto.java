@@ -13,8 +13,8 @@ import java.sql.Date;
 public class ProjectDto {
     private String name;
     private String geolocation;
-    private Date dateStart;
-    private Date dateEnd;
+//    private Date dateStart;
+//    private Date dateEnd;
     private Status status;
     private String description;
     private Integer room;

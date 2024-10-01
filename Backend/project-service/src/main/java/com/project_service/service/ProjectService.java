@@ -109,7 +109,7 @@ public class ProjectService {
         return "Task service is temporarily unavailable. Please try again later.";
     }
 
-    public Page<Project> multiparamFiler(String location , Status status , Double minBudget , Double maxBudget , Date dateStart , Date dateEnd , int page , int size , String sortField , String sortDirection) {
+    public Page<Project> multiparamFiler(String location , Status status , Double minBudget , Double maxBudget  , int page , int size , String sortField , String sortDirection) {
         Sort.Direction direction = sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortField));
 
@@ -124,12 +124,12 @@ public class ProjectService {
             if (maxBudget != null) {
                 predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("budget"), maxBudget));
             }
-            if (dateStart != null) {
-                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("date"), dateStart));
-            }
-            if (dateEnd != null) {
-                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("date"), dateEnd));
-            }
+//            if (dateStart != null) {
+//                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("date"), dateStart));
+//            }
+//            if (dateEnd != null) {
+//                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("date"), dateEnd));
+//            }
             if (page > 0) {
                 predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("page"), page));
             }
@@ -163,6 +163,7 @@ public class ProjectService {
                 .collect(Collectors.toList());
     }
 
+
     public Page<Project> searchProjects(String query , Pageable pageable) {
         Criteria criteria = new Criteria("name").fuzzy(query)
                 .or(new Criteria("description").fuzzy(query));
@@ -173,5 +174,9 @@ public class ProjectService {
         SearchHits<Project> searchHits=elasticsearchOperations.search(searchQuery,Project.class);
         List<Project> projectList = searchHits.getSearchHits().stream().map(SearchHit::getContent).collect(Collectors.toList());
         return new PageImpl<>(projectList,pageable,searchHits.getTotalHits());
+    }
+
+    public List<Project> findallelastic(){
+        return projectElasticsearchRepository.findAllByOrderByNameAsc();
     }
 }
