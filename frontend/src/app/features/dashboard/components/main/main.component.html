@@ -1,0 +1,64 @@
+<section class="main">
+    <div class="cardBox d-flex flex-row justify-content-between">
+      <mat-card class="card d-flex flex-row justify-content-between align-content-center align-items-center">
+        <div class="analytic d-flex flex-column justify-content-evenly align-content-center align-items-center">
+          <div class="numbers">{{ totalProjects }}</div>
+          <div class="cardName">Projects</div>
+        </div>
+        <div class="iconBx d-flex justify-content-center align-content-center align-items-center">
+          <mat-icon>rocket</mat-icon>
+        </div>
+      </mat-card>
+  
+      <mat-card class="card d-flex flex-row justify-content-between align-content-center align-items-center">
+        <div class="analytic d-flex flex-column justify-content-evenly align-content-center align-items-center">
+          <div class="numbers">{{ totalResources }}</div>
+          <div class="cardName">Resource</div>
+        </div>
+        <div class="iconBx d-flex justify-content-center align-content-center align-items-center">
+          <mat-icon>recycling</mat-icon>
+        </div>
+      </mat-card>
+  
+      <!-- <mat-card class="card d-flex flex-row justify-content-between align-content-center align-items-center">
+        <div class="analytic d-flex flex-column justify-content-evenly align-content-center align-items-center">
+          <div class="numbers">{{ totalUsers }}</div>
+          <div class="cardName">Users</div>
+        </div>
+        <div class="iconBx d-flex justify-content-center align-content-center align-items-center">
+          <mat-icon>person</mat-icon>
+        </div>
+      </mat-card> -->
+  
+      <mat-card class="card d-flex flex-row justify-content-between align-content-center align-items-center">
+        <div class="analytic d-flex flex-column justify-content-evenly align-content-center align-items-center">
+          <div class="numbers">{{ totalTasks }}</div>
+          <div class="cardName">Task</div>
+        </div>
+        <div class="iconBx justify-content-center align-content-center align-items-center">
+          <mat-icon>account_balance</mat-icon>
+        </div>
+      </mat-card>
+    </div>
+  <!-- Graphiques -->
+  <div class="chartsBx">
+    <div class="chart">
+      <canvas baseChart
+        [data]="doughnutChartData"
+        [type]="doughnutChartType">
+      </canvas>
+    </div>
+    <div class="chart">
+      <canvas baseChart
+        [data]="barChartData"
+        [type]="barChartType">
+      </canvas>
+    </div>
+  </div>
+
+  <!-- Calendrier -->
+  <div id="calendar" class="calendar-container">
+    <full-calendar [options]="calendarOptions"></full-calendar>
+  </div>
+  </section>
+  

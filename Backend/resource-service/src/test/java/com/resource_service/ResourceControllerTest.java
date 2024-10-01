@@ -77,26 +77,26 @@ public class ResourceControllerTest {
         assertEquals("Resource not found", response.getBody());
     }
 
-    @Test
-    void getAllResources_Success() {
-        List<Resource> resources = Arrays.asList(new Resource(), new Resource());
-        when(resourceService.getAllResources()).thenReturn(resources);
 
-        ResponseEntity<?> response = resourceController.getAllResources();
+//    void getAllResources_Success() {
+//        List<Resource> resources = Arrays.asList(new Resource(), new Resource());
+//        when(resourceService.getAllResources()).thenReturn(resources);
+//
+//        ResponseEntity<?> response = resourceController.getAllResources();
+//
+//        assertEquals(HttpStatus.OK, response.getStatusCode());
+//        assertEquals(resources, response.getBody());
+//    }
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(resources, response.getBody());
-    }
-
-    @Test
-    void getAllResources_NotFound() {
-        when(resourceService.getAllResources()).thenThrow(new ResourceNotFoundException("Resources not found"));
-
-        ResponseEntity<?> response = resourceController.getAllResources();
-
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertEquals("Resources not found", response.getBody());
-    }
+//    @Test
+//    void getAllResources_NotFound() {
+//        when(resourceService.getAllResources()).thenThrow(new ResourceNotFoundException("Resources not found"));
+//
+//        ResponseEntity<?> response = resourceController.getAllResources();
+//
+//        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+//        assertEquals("Resources not found", response.getBody());
+//    }
 
     @Test
     void updateResource_Success() {

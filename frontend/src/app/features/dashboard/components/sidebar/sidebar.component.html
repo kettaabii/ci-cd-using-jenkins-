@@ -1,0 +1,50 @@
+<mat-sidenav class="sidebar" mode="side" opened>
+    <div class="menu-bar">
+        <div class="logo d-flex flex-row justify-content-evenly align-content-center align-items-center">
+            <img class="favicon" src="favicon.ico" alt="">
+            <img class="company" src="assets/logo-white.png" alt="">
+        </div>
+        <div class="menu d-flex flex-column justify-content-between">
+            <div class="first-option">
+                <mat-nav-list class="options d-flex flex-column justify-content-between">
+                    <mat-list-item routerLink="/dashboard/main" routerLinkActive="active" class="nav-link">
+                        <mat-icon class="icon">dashboard</mat-icon>
+                        <span>Dashboard</span>
+                    </mat-list-item>
+                    <mat-list-item routerLink="/dashboard/projects" routerLinkActive="active" class="nav-link">
+                        <mat-icon class="icon">home</mat-icon>
+                        <span>Project</span>
+                    </mat-list-item>
+                    <mat-list-item routerLink="/dashboard/teams" routerLinkActive="active" class="nav-link">
+                        <mat-icon class="icon">people</mat-icon>
+                        <span>Users</span>
+                    </mat-list-item>
+                    <!-- <mat-list-item routerLink="/dashboard/supervisors" routerLinkActive="active" class="nav-link">
+                        <mat-icon class="icon">supervisor_account</mat-icon>
+                        <span>Supervisor</span>
+                    </mat-list-item> -->
+                    <!-- <mat-list-item routerLink="/dashboard/vehicles" routerLinkActive="active" class="nav-link">
+                        <mat-icon class="icon">directions_car</mat-icon>
+                        <span>Tasks</span>
+                    </mat-list-item> -->
+                    <mat-list-item routerLink="/dashboard/equipments" routerLinkActive="active" class="nav-link">
+                        <mat-icon class="icon">build</mat-icon>
+                        <span>Tasks</span>
+                    </mat-list-item>
+                    <mat-list-item routerLink="/dashboard/materials" routerLinkActive="active" class="nav-link">
+                        <mat-icon class="icon">recycling</mat-icon>
+                        <span>Resources</span>
+                    </mat-list-item>
+                </mat-nav-list>
+            </div>
+            <div class="last-option">
+                <mat-nav-list class="options">
+                    <mat-list-item (click)="onLogout()" class="nav-link">
+                        <mat-icon class="icon">logout</mat-icon>
+                        <span>Log out</span>
+                    </mat-list-item>
+                </mat-nav-list>
+            </div>
+        </div>
+    </div>
+</mat-sidenav>

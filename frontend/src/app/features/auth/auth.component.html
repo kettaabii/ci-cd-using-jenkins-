@@ -1,0 +1,71 @@
+<section #loginContainer class="login-container authentication container d-flex justify-content-between">
+    <div class="right">
+        <div class="logo">
+            <img src="assets/logo-white.jpg" alt="Logo" />
+        </div>
+
+        <div class="welcome">
+            <h1>Welcome back,</h1>
+            <span *ngIf="!loginError">Welcome back! Please enter your details.</span>
+            <span *ngIf="loginError" class="error-message">{{ loginError }}</span>
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                <div class="form-group" style="margin-top: 10px;">
+                    <mat-form-field appearance="outline" class="input">
+                        <mat-label>Username</mat-label>
+                        <input matInput type="username" formControlName="username" placeholder="Ex: user123">
+                        <mat-error *ngIf="loginForm.get('username')?.hasError('required')">Username is
+                            <strong>required</strong></mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="form-group">
+                    <mat-form-field appearance="outline" class="input">
+                        <mat-label>Password</mat-label>
+                        <input matInput [type]="hide ? 'text' : 'password'" placeholder="Password"
+                            formControlName="password">
+                        <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'">
+                            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                        </button>
+                        <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+                            Password is <strong>required</strong>
+                        </mat-error>
+                        <mat-error *ngIf="loginForm.get('password')?.hasError('minlength')">
+                            Password must be at least 6 characters long
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="strenght d-flex flex-row justify-content-between">
+                    <div id="bars" [ngClass]="strengthClass">
+                        <div></div>
+                    </div>
+                </div>
+
+                <div class="button">
+                    <button type="submit" class="btn">Login</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="authenticate">
+            <div class="d-flex flex-row justify-content-evenly">
+                <div class="terms">
+                    <p>Don't have an account?</p>
+                </div>
+                <div class="forgot">
+                    <a href="">Sign up for free</a>
+                </div>
+            </div>
+        </div>
+    </div>
+  <div class="left d-flex flex-column justify-content-between">
+    <div class="bg">
+      <img src="assets/auth-bg.jpg" alt="Background image" />
+    </div>
+  </div>
+</section>
+
+
+<div *ngIf="showSuccessAnimation" class="success-animation">
+    <img src="favicon.ico" alt="Company Logo" />
+</div>

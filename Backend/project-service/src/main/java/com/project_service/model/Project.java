@@ -31,8 +31,9 @@ public class Project {
     @Column(name = "id", nullable = false, unique = true)
     private Long id;
 
-    @Field(type = FieldType.Text, name = "name")
+
     @Column(name = "name", nullable = false)
+    @Field(type = FieldType.Text, name = "name", analyzer = "standard")
     private String name;
 
     @Column(name = "geolocation", nullable = false)
@@ -50,8 +51,9 @@ public class Project {
     @Column(name = "status", nullable = false)
     private Status status;
 
-    @Field(type = FieldType.Text , name = "description")
+
     @Column(name = "description", nullable = false)
+    @Field(type = FieldType.Text , name = "description",  analyzer = "standard")
     private String description;
 
     @Column(name = "room", nullable = false)

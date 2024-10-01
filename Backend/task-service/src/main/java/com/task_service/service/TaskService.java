@@ -8,6 +8,10 @@ import com.task_service.model.Task;
 import com.task_service.repository.TaskRepository;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -157,5 +161,15 @@ public class TaskService {
 
     public String projectServiceFallback(Long projectId, Throwable throwable) {
         return "Project service is temporarily unavailable. Please try again later.";
+    }
+
+    public Page<TaskDto> getAllTasks(int page, int size, String sortField, String sortDirection) {
+        Sort.Direction direction = sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortField));
+        var tasks = taskRepository.findAll(pageable);
+        if (tasks.getContent().isEmpty()) {
+            throw new TaskNotFoundException("Tasks not found!");
+        }
+        return tasks.map(taskMapper::toDto);
     }
 }

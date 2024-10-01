@@ -6,6 +6,10 @@ import com.resource_service.mapper.ResourceMapper;
 import com.resource_service.model.Resource;
 import com.resource_service.repository.ResourceRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,12 +34,14 @@ public class ResourceService {
         return resourceMapper.toDto(resource);
     }
 
-    public List<Resource> getAllResources() {
-        var resources = resourceRepository.findAll();
-        if (resources.isEmpty()) {
-            throw new ResourceNotFoundException("Tasks not founds");
+    public Page<ResourceDto> getAllResources(int page, int size, String sortField, String sortDirection) {
+        Sort.Direction direction = sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortField));
+        var resources = resourceRepository.findAll(pageable);
+        if (resources.getContent().isEmpty()) {
+            throw new ResourceNotFoundException("Resources not found!");
         }
-        return resources;
+        return resources.map(resourceMapper::toDto);
     }
 
     public ResourceDto updateResource(Long id, ResourceDto resourceDto) {

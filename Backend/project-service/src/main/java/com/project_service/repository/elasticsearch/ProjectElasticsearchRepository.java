@@ -14,6 +14,7 @@ public interface ProjectElasticsearchRepository extends ElasticsearchRepository<
     @Query("{\"multi_match\": {\"query\": \"?0\", \"fields\": [\"name\", \"description\"], \"type\": \"phrase_prefix\"}}")
     Page<Project> autocomplete(String query, Pageable pageable);
 
-    List<Project> findAllByOrderByNameAsc();
+    @Query("{\"multi_match\": {\"query\": \"?0\", \"fields\": [\"name\", \"description\"], \"type\": \"phrase_prefix\"}}")
+    Page<Project> search(String query, Pageable pageable);
 
 }

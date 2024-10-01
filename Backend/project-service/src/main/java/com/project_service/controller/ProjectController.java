@@ -86,18 +86,16 @@ public class ProjectController {
 
     @GetMapping("/filter")
     public ResponseEntity<?> filterProjects(
-            @RequestParam(required = false, name = "location") String location,
+            @RequestParam(required = false, name = "geolocation") String geolocation,
             @RequestParam(required = false, name = "status") Status status,
             @RequestParam(required = false, name = "minBudget") Double minBudget,
             @RequestParam(required = false, name = "maxBudget") Double maxBudget,
-//            @RequestParam(required = false, name = "dateStart") Date dateStart,
-//            @RequestParam(required = false, name = "dateEnd") Date dateEnd,
             @RequestParam(defaultValue = "0", name = "page") int page,
             @RequestParam(defaultValue = "10", name = "size") int size,
             @RequestParam(defaultValue = "name", name = "sortField") String sortField,
             @RequestParam(defaultValue = "asc", name = "sortDirection") String sortDirection) {
         try {
-            var projects = projectService.multiparamFiler(location, status, minBudget, maxBudget, page, size, sortField, sortDirection);
+            var projects = projectService.multiparamFiler(geolocation, status, minBudget, maxBudget, page, size, sortField, sortDirection);
             return ResponseEntity.ok(projects);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -126,9 +124,6 @@ public class ProjectController {
         return ResponseEntity.ok(searchResults);
     }
 
-    @GetMapping("/test")
-    public List<Project> findalls(){
-        return projectService.findallelastic();
-    }
+
 
 }

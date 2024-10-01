@@ -1,0 +1,14 @@
+<mat-sidenav-container class="dashboard-container d-flex flex-row justify-content-between">
+    <mat-sidenav class="sidebar" mode="side" opened>
+        <app-sidebar></app-sidebar>
+    </mat-sidenav>
+
+    <mat-sidenav-content class="main-container d-flex flex-column justify-content-between">
+        <mat-toolbar class="navbar">
+            <app-navbar fxFlex="100%"></app-navbar>
+        </mat-toolbar>
+        <mat-sidenav-content class="main">
+            <router-outlet></router-outlet>
+        </mat-sidenav-content>
+    </mat-sidenav-content>
+</mat-sidenav-container>

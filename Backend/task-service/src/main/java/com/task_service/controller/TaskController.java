@@ -36,6 +36,19 @@ public class TaskController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+    @GetMapping("/get-all-tasks")
+    public ResponseEntity<?> getAllTasks(
+            @RequestParam(defaultValue = "0", name = "page") int page,
+            @RequestParam(defaultValue = "10", name = "size") int size,
+            @RequestParam(defaultValue = "title", name = "sortField") String sortField,
+            @RequestParam(defaultValue = "asc", name = "sortDirection") String sortDirection) {
+        try {
+            var tasks = taskService.getAllTasks(page, size, sortField, sortDirection);
+            return ResponseEntity.ok(tasks);
+        } catch (TaskNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 
     @GetMapping("/get-tasks-by-project/{projectId}")
     public ResponseEntity<?> getTasksByProjectId(@PathVariable("projectId") Long projectId) {

@@ -36,9 +36,13 @@ public class ResourceController {
     }
 
     @GetMapping("/get-all-resources")
-    public ResponseEntity<?> getAllResources() {
+    public ResponseEntity<?> getAllResources(
+            @RequestParam(defaultValue = "0", name = "page") int page,
+            @RequestParam(defaultValue = "10", name = "size") int size,
+            @RequestParam(defaultValue = "title", name = "sortField") String sortField,
+            @RequestParam(defaultValue = "asc", name = "sortDirection") String sortDirection) {
         try {
-            var resources = resourceService.getAllResources();
+            var resources = resourceService.getAllResources(page, size, sortField, sortDirection);
             return ResponseEntity.ok(resources);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

@@ -1,0 +1,155 @@
+<section class="main">
+  <div class="main-header d-flex flex-row justify-content-between align-items-center p-3 bg-light border-bottom">
+  
+    <!-- Filters Section -->
+    <div class="filters-section d-flex flex-wrap gap-3 align-items-center">
+      <div class="form-group mb-0">
+        <label for="geolocation" class="small">Geolocation:</label>
+        <input 
+          id="geolocation" 
+          type="text" 
+          class="form-control form-control-sm" 
+          [(ngModel)]="geolocation" 
+          placeholder="Enter geolocation" 
+          (change)="applyFilters()">
+      </div>
+  
+      <div class="form-group mb-0">
+        <label for="status" class="small">Status:</label>
+        <input 
+          id="status" 
+          type="text" 
+          class="form-control form-control-sm" 
+          [(ngModel)]="status" 
+          placeholder="Enter status" 
+          (change)="applyFilters()">
+      </div>
+  
+      <div class="form-group mb-0">
+        <label for="minBudget" class="small">Min Budget:</label>
+        <input 
+          id="minBudget" 
+          type="number" 
+          class="form-control form-control-sm" 
+          [(ngModel)]="minBudget" 
+          placeholder="Min Budget" 
+          (change)="applyFilters()">
+      </div>
+  
+      <div class="form-group mb-0">
+        <label for="maxBudget" class="small">Max Budget:</label>
+        <input 
+          id="maxBudget" 
+          type="number" 
+          class="form-control form-control-sm" 
+          [(ngModel)]="maxBudget" 
+          placeholder="Max Budget" 
+          (change)="applyFilters()">
+      </div>
+  
+      <div class="form-group mb-0">
+        <label for="dateStart" class="small">Date Start:</label>
+        <input 
+          id="dateStart" 
+          type="date" 
+          class="form-control form-control-sm" 
+          [(ngModel)]="dateStart" 
+          (change)="applyFilters()">
+      </div>
+  
+      <div class="form-group mb-0">
+        <label for="dateEnd" class="small">Date End:</label>
+        <input 
+          id="dateEnd" 
+          type="date" 
+          class="form-control form-control-sm" 
+          [(ngModel)]="dateEnd" 
+          (change)="applyFilters()">
+      </div>
+  
+      <div class="form-group mb-0 d-flex align-items-start d-flex flex-column w-25">
+        <label for="sortField" class="small mr-3">Sort by:</label>
+        <div class="d-flex flex-row justify-content-between">
+          <select 
+          id="sortField" 
+          class="form-control form-control-sm mr-2 mx-2" 
+          [(ngModel)]="sortField" 
+          (change)="onSortChange(sortField, sortDirection)">
+          <option value="name">Name</option>
+          <option value="description">Description</option>
+          <option value="budget">Budget</option>
+        </select>
+  
+        <select 
+          class="form-control form-control-sm mx-2" 
+          [(ngModel)]="sortDirection" 
+          (change)="onSortChange(sortField, sortDirection)">
+          <option value="asc">Ascending</option>
+          <option value="desc">Descending</option>
+        </select>
+        </div>
+      </div>
+  
+      <button class="btn btn-secondary btn-sm" (click)="resetFilters()">Reset Filters</button>
+    </div>
+  </div>
+  
+
+  <div class="main-scroll d-flex flex-row flex-wrap">
+    <div *ngFor="let project of projects" class="project-card card justify-content-between d-flex flex-column">
+
+      <div class="dropdown">
+        <button class="btn dropdown-toggle-split" type="button" mat-icon-button [matMenuTriggerFor]="menu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item>View Detail</button>
+          <button mat-menu-item>Update</button>
+          <button mat-menu-item>Delete</button>
+        </mat-menu>
+      </div>
+
+      <img [src]="project.picture" class="card-img-top project-img" alt="Room Image">
+
+      <div class="project-head d-flex flex-row justify-content-between align-items-center">
+        <h6>{{ project.name }}</h6>
+        <span>Budget: {{ project.budget }} $</span>
+      </div>
+
+      <div class="d-flex flex-row progresss justify-content-between align-items-center">
+        <span>Progress</span>
+        <div class="progress-project">
+          <mat-progress-bar 
+            [value]="project.progress" >
+          </mat-progress-bar>
+        </div>
+      </div>
+
+      <div class="project-details d-flex flex-row justify-content-between mt-2">
+        <div class="size d-flex flex-column">
+          <mat-icon>square_foot</mat-icon>
+          <span>{{ project.areaSize }} m²</span>
+        </div>
+        <div class="geolocation d-flex flex-column">
+          <mat-icon>location_on</mat-icon>
+          <span>{{ project.geolocation }}</span>
+        </div>
+        <div class="room d-flex flex-column">
+          <mat-icon>door_front</mat-icon>
+          <span>{{ project.room }} rooms</span>
+        </div>
+      </div>
+
+      <div class="project-action">
+        <a [href]="'/tasks?id=' + project.id + '&name=' + project.name">Show Tasks</a>
+      </div>
+    </div>
+  </div>
+
+  <mat-paginator 
+    [length]="totalProjects"
+    [pageSize]="size"
+    [pageSizeOptions]="[6, 9, 12, 18, 24]"
+    (page)="onPageChange($event)">
+  </mat-paginator>
+</section>

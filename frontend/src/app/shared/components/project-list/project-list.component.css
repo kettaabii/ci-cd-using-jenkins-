@@ -1,0 +1,161 @@
+:host {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+mat-paginator{
+    background-color: white;
+}
+a{
+    text-decoration: none;
+    color: black;
+}
+.main-header {
+    width: 100%;
+    height: 10%;
+    padding: 10px 30px;
+}
+
+.main-header .main-section span {
+    font-size: 12px;
+    color: gray;
+}
+
+.main-scroll {
+    width: 90%;
+    margin: 40px;
+    gap: 50px;
+    height: auto;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.add {
+    width: 270px;
+    height: 300px;
+    background-color: var(--grey-color);
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    align-content: center;
+
+}
+
+.add a mat-icon {
+    color: black;
+    font-size: 60px;
+}
+
+.main-actions {
+    margin-top: 10px;
+    width: 30%;
+    gap: 20px;
+
+}
+
+.main-actions i {
+    padding: 0 10px;
+    font-size: 20px;
+}
+
+.main-actions div {
+    height: 40px;
+}
+
+.selected {
+    background-color: #ff914c39;
+    border: 2px solid var(--primary-color);
+}
+
+.project-card {
+    position: relative;
+    border: none;
+    width: 270px;
+    height: 300px;
+    background-color: var(--white-color);
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    align-content: center;
+}
+
+.project-card .project-img {
+    border-radius: 20px;
+    height: 150px;
+
+}
+
+.project-card .dropdown {
+    position: absolute;
+    top: 5px;
+    right: 7px;
+}
+
+.project-card .project-head {
+    height: 40px;
+    padding: 0 10px;
+}
+
+.project-card .project-head h6 {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--black-color);
+}
+
+.project-card span {
+    font-size: 12px;
+    font-weight: bold;
+    color: grey;
+}
+
+.project-card .progresss {
+    margin-top: -10px;
+    width: 100%;
+    padding: 0 10px;
+}
+
+.project-card .progress-project {
+    width: 75%;
+    height: 5px;
+    border-radius: 3px;
+    background-color: var(--secondary-color);
+}
+
+.project-card .progressed {
+    height: 5px;
+    border-radius: 3px;
+    transition: var(--tran-04);
+}
+
+.project-card .project-details {
+    padding: 0 15px;
+}
+
+.project-card .project-details mat-icon {
+    font-size: 17px;
+    margin: 5px 0;
+}
+
+.project-card .project-details .geolocation {
+    border-left: 1px solid var(--black-color);
+    border-right: 1px solid var(--black-color);
+    padding: 0 10px;
+}
+
+.project-card .project-action {
+    width: 100%;
+    height: 50px;
+    padding: 10px 10px;
+}
+
+.project-card .project-action a {
+    background-color: var(--primary-color);
+    padding: 5px 85px;
+    margin-top: 20px;
+    border-radius: 5px;
+    color: var(--black-color);
+    font-size: 12px;
+    font-weight: bold;
+}
